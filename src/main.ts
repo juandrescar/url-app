@@ -21,7 +21,7 @@ const vuetify = createVuetify({
           dark: false,
           colors: {
             primary: '#6200EE',
-            secondary: '#03DAC6',
+            secondary: '#3abeab',
             background: '#121212',
             surface: '#1E1E1E',
             error: '#CF6679',
