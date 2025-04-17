@@ -23,13 +23,20 @@ const props = defineProps({
   data: Array,
 });
 
+function getCssVariableRgb(name: string): string {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+  return `rgb(${value})`
+}
+
+const color = getCssVariableRgb('--v-theme-primary')
+
 const chartData = {
   labels: props.labels  as string[],
   datasets: [
     {
       label: 'Visitas',
       data: props.data as number[],
-      borderColor: '#3f51b5',
+      borderColor: color,
       backgroundColor: '#3f51b580',
       fill: true,
     },
@@ -41,6 +48,15 @@ const chartOptions = {
   plugins: {
     legend: { position: 'top' },
     title: { display: true, text: 'Estadísticas de visitas' },
+  },
+  scales: {
+    x: {
+      beginAtZero: true,
+      min: 0,
+      ticks: {
+        precision: 0,
+      },
+    },
   },
 };
 </script>

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const stats = axios.create({
-  baseURL: "http://localhost:3001", // Reemplaza con la URL de tu API
+  baseURL: import.meta.env.VITE_STAT_API,
   headers: {
     "Content-Type": "application/json",
   },

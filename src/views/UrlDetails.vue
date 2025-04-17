@@ -1,66 +1,123 @@
 <template>
   <v-container>
-    <h1>📍 Detalles de la URL {{ id }}</h1>
+    <h1>📍 Detalles de la URL {{ details.short_code }}</h1>
+
     <v-progress-circular v-if="loading" indeterminate></v-progress-circular>
     <div v-else>
-      <Icon path={mdiGoogleChrome} size={1} />
-      <v-icon>
-          <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>google-chrome</title><path d="M12,20L15.46,14H15.45C15.79,13.4 16,12.73 16,12C16,10.8 15.46,9.73 14.62,9H19.41C19.79,9.93 20,10.94 20,12A8,8 0 0,1 12,20M4,12C4,10.54 4.39,9.18 5.07,8L8.54,14H8.55C9.24,15.19 10.5,16 12,16C12.45,16 12.88,15.91 13.29,15.77L10.89,19.91C7,19.37 4,16.04 4,12M15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12M12,4C14.96,4 17.54,5.61 18.92,8H12C10.06,8 8.45,9.38 8.08,11.21L5.7,7.08C7.16,5.21 9.44,4 12,4M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
-      </v-icon>
 
-      <v-icon>mdi-home</v-icon>
-      <v-icon>mdi-google-chrome</v-icon>
-      <v-icon>mdi-firefox</v-icon>
-      <v-icon>mdi-apple-safari</v-icon>
-      <v-icon>mdi-microsoft-edge</v-icon>
-      <v-icon>mdi-opera</v-icon>
-      <v-icon>mdi-web</v-icon>
-
-      <v-list>
-          <v-chip
-            v-for="(count, browser) in browserCounts"
-            :key="browser"
-            :prepend-icon="getBrowserIcon(browser)"
+      <v-row>
+        <v-col cols="12" sm="10" class="pr-0">
+          <v-card
+            append-icon="mdi-link"
+            class="my-4"
+            :href=details.original_url
+            rel="noopener"
+            target="_blank"
+            :subtitle=details.domain
+            :title=details.title
+            min-height="200"
           >
-            {{ browser }}
-            <v-badge
-              color="info"
-              :content="count"
-              inline
-            ></v-badge>
-          </v-chip>
-      </v-list>
-      
-      <p>Visitas: {{ details.total }}</p>
-      <v-list>
-        <v-chip
-          v-for="browser in details.browsers"
-          :key="browser"
-          :prepend-icon="getBrowserIcon(browser)"
-        >
-          {{ browser }}
-        </v-chip>
-      </v-list>
+            <template v-slot:prepend>
+              <v-avatar color="blue-darken-2"> 
+                <v-img :src=details.favicon></v-img>
+              </v-avatar>
+            </template>
+            <v-card-text>{{ details.description }}</v-card-text>
+          </v-card>
+        </v-col>
 
-      <v-list>
-        <v-chip
-          prepend-icon="$vuetify"
-          v-for="location in details.locations"
-        >
-          {{ location }}
-        </v-chip>
-      </v-list>
+        <v-col cols="12" sm="2" class="pl-0 pb-0">
+          <v-card class="my-4">
+            <v-img 
+              :src=details.image
+              cover
+              :height="200"
+              aspect-ratio="1/1"
+            />
+          </v-card>
+        </v-col>
+      </v-row>
 
-      <v-data-table 
-        :items="details.items"
+      <v-card
+        class="mb-3"
+      >
+        <v-card-text
+          class="pb-0"
+        >
+          <h2 class="text-h6 mb-1">Total de visitas: {{ details.total }}</h2>
+        </v-card-text>
+
+        <v-card-text
+          class="pt-0"
+        >
+          <h1 class="text-h6 mb-1">
+            Navegadores
+          </h1>
+
+          <div>
+            <v-chip
+              class="mr-1"
+              v-for="(count, browser) in browserCounts"
+              :key="browser"
+              :prepend-icon="getBrowserIcon(browser)"
+              variant="outlined"
+              label
+            >
+              {{ browser }}
+              <v-badge
+                color="secondary"
+                :content="count"
+                inline
+              ></v-badge>
+            </v-chip>
+          </div>
+        </v-card-text>
+
+        <v-card-text
+          class="pt-0"
+        >
+          <h2 class="text-h6 mb-1">Paises</h2>
+
+          <div>
+            <v-chip
+                class="mr-1"
+                v-for="(count, location) in locationCounts"
+                :key="location"
+                variant="outlined"
+                label
+              >
+                {{ location }}
+                <v-badge
+                  color="secondary"
+                  :content="count"
+                  inline
+                ></v-badge>
+              </v-chip>
+          </div>
+        </v-card-text>
+      </v-card>
+
+      <v-data-table
         :headers="headers"
-      ></v-data-table>
+        :items="details.items"
+        :header-props="{ class: 'myDarkTheme bg-primary text-white' }"
+      >
+        <template #item="{ item, index }">
+          <tr :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
+            <td>{{ item.browser }}</td>
+            <td class="text-end">{{ item.location }}</td>
+            <td class="text-end">{{ item.createdAt }}</td>
+            <!-- etc -->
+          </tr>
+        </template>
+      </v-data-table>
     </div>
   </v-container>
 </template>
   
 <script lang="ts">
   import stats from "../apis/stats";
+  import url from "../apis/urls";
   import moment from 'moment';
 
   const headers = [
@@ -84,6 +141,11 @@
     items: Stat[];
     original_url: string;
     short_code: string;
+    title: string;
+    image: string;
+    favicon: string;
+    description: string
+    domain: string
   }
 
 export default {
@@ -108,7 +170,9 @@ export default {
   async created() {
     try {
       const response = await stats.get(`/stats?urlId=${this.id}`);
-      
+      const responseUrl = await url.get(`/urls/${this.id}`);
+
+      this.details = responseUrl.data.data;
       this.details.items = response.data.data;
       this.details.total = response.data.total;
       this.details.locations = [...new Set(this.details.items.map(item => item.location))];
@@ -122,11 +186,22 @@ export default {
     getBrowserIcon(browser : string) {
       return this.icons[browser] || "mdi-web";
     },
+
+     getRowClass(item: Details, index:number) {
+      return index % 2 === 0 ? 'even-row' : 'odd-row'
+    }
   },
   computed: {
     browserCounts(): Record<string, number> {
       return this.details.items.reduce((acc: Record<string, number>, item) => {
         acc[item.browser] = (acc[item.browser] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+    },
+
+    locationCounts(): Record<string, number> {
+      return this.details.items.reduce((acc: Record<string, number>, item) => {
+        acc[item.location] = (acc[item.location] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
     }
@@ -138,3 +213,45 @@ function formatDate (value : Date) : string {
     return moment(String(value)).format('MM/DD/YYYY hh:mm');
   }
 </script>
+
+<style scoped>
+
+  :deep(.theme-card) {
+    background-color: var(--v-theme-secondary);
+    color: var(--v-theme-on-secondary);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    margin: 32px auto;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .custom-box {
+    background-color: var(--v-theme-secondary);
+    color: var(--v-theme-on-secondary);
+    padding: 16px;
+    border-radius: 8px;
+  }
+.zebra-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.zebra-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+  .even-row {
+    background-color: rgb(var(--v-theme-background)) !important;
+  }
+  
+  .odd-row {
+    background-color: rgb(var(--v-theme-surface)) !important;
+  }
+
+  tr:hover {
+    background-color: rgb(var(--v-theme-on-surface), 0.5) !important;
+    cursor: pointer;
+  }
+</style>
