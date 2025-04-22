@@ -1,16 +1,16 @@
 <template>
   <v-app>
-    <NavBar />
+    <NavBar :auth="auth" />
     <v-main>
-      <router-view />
+      <router-view @login-success="auth = true" />
     </v-main>
   </v-app>
 </template>
 
-<script lang="ts">
-import NavBar from './components/NavBar.vue';
+<script setup lang="ts">
+  import { ref, provide } from 'vue'
+  import NavBar from './components/NavBar.vue';
 
-export default {
-  components: { NavBar },
-};
+  const auth = ref(!!localStorage.getItem('auth_token'))
+  provide('auth', auth)
 </script>

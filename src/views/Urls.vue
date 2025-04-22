@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <h1>🔗 URLs</h1>
+    <v-btn to="/urls/create">Agregar</v-btn>
     <v-list>
       <v-list-item 
         v-for="url in urls" 
@@ -26,7 +27,7 @@
 </template>
   
 <script lang="ts">
-  import urls from "../apis/urls";
+  import urls from '../apis/urls';
 
   const defaultFavicon = '/images/default-favicon.png'
 
@@ -47,7 +48,7 @@
     },
     async created() {
       try {
-        const response = await urls.get("/");
+        const response = await urls.index();
         this.urls = response.data.data;
       } catch (error) {
         console.error("Error al obtener URLs", error);
