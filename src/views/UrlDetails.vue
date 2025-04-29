@@ -22,12 +22,12 @@
 </template>
   
 <script lang="ts">
-  import stats from "../apis/stats";
+  import stats from "../services/stats";
   import Preview from '../components/Preview.vue';
   import History from "../components/History.vue";
   import TopComponent from "../components/TopComponent.vue";
   import type { Details } from '../types';
-  import urls from "../apis/urls";
+  import urls from "../services/urls";
 
   export default {
     props: ["id"],
@@ -48,11 +48,11 @@
     },
     async created() {
       try {
-        const response = await stats.get(`/stats?urlId=${this.id}`);
+        const response = await stats.getStatUrl(this.id);
         const responseUrl = await urls.show(this.id);
-        console.log(response, responseUrl);
 
         this.details = responseUrl.data.data;
+        this.details.url = `${import.meta.env.VITE_URL_API}/${this.details.short_code}`
         this.details.items = response.data.data;
         this.details.total = response.data.total;
       } catch (error) {

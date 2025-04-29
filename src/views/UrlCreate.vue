@@ -27,36 +27,24 @@
 </template>
   
 <script setup lang="ts">
-import { ref } from 'vue'
-import { urlRules } from "../rules"
-import { useRouter } from 'vue-router'
-import { AxiosError } from 'axios'
-import urls from '../apis/urls'
+  import { ref } from 'vue'
+  import { urlRules } from "../rules"
+  import { useRouter } from 'vue-router'
+  import { AxiosError } from 'axios'
+  import urls from '../services/urls'
 
-const url = ref('')
-// const email = ref('')
-// const password = ref('')
-// const password_confirmation = ref('')
-const error = ref('')
-const router = useRouter()
+  const url = ref('')
+  const error = ref('')
+  const router = useRouter()
+  const isValid = ref(true)
 
-const isValid = ref(true)
-
-// const confirmPassword = computed<ValidationRule[]>(() => [
-//   confirmPasswordRules(() => password.value)
-// ])
-
-// const confirmPassword = computed(() => [
-//   confirmPasswordRules(password.value)
-// ])
-
-async function handleCreate() {
-  try {
-    await urls.create(url.value)
-    router.push('/urls')
-  } catch (err) {
-    const axiosErr = err as AxiosError<{ message: string }>
-    error.value = axiosErr.response?.data?.message || 'Error al registrarse'
+  async function handleCreate() {
+    try {
+      await urls.create(url.value)
+      router.push('/urls')
+    } catch (err) {
+      const axiosErr = err as AxiosError<{ message: string }>
+      error.value = axiosErr.response?.data?.message || 'Error al registrarse'
+    }
   }
-}
 </script>

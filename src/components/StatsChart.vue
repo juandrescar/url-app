@@ -29,6 +29,7 @@
   }
 
   const color = getCssVariableRgb('--v-theme-primary')
+  const background = getCssVariableRgb('--v-theme-background')
 
   const chartData = {
     labels: props.labels  as string[],
@@ -37,7 +38,7 @@
         label: 'Visitas',
         data: props.data as number[],
         borderColor: color,
-        backgroundColor: '#3f51b580',
+        backgroundColor: background,
         fill: true,
       },
     ],

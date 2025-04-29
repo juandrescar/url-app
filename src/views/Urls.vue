@@ -27,7 +27,7 @@
 </template>
   
 <script lang="ts">
-  import urls from '../apis/urls';
+  import urls from '../services/urls';
 
   const defaultFavicon = '/images/default-favicon.png'
 

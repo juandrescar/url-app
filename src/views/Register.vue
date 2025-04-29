@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import Auth from "../apis/auth";
+import Auth from "../services/auth";
 import { nameRules, emailRules, passwordRules, confirmPasswordRules } from "../rules"
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios';

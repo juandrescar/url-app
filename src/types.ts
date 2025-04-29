@@ -18,6 +18,7 @@ export interface Details {
   favicon: string;
   description: string
   domain: string
+  url: string
 }
 
 export interface LoginRequest {

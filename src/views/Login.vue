@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import Auth from "../apis/auth";
+  import Auth from "../services/auth";
   import { emailRules, passwordRequired } from "../rules"
   import { useRouter } from 'vue-router'
 
@@ -50,7 +50,7 @@
   async function handleLogin() {
     try {
       const response = await Auth.login({ email: email.value, password: password.value })
-      localStorage.setItem('auth_token', response.data.token);
+      localStorage.setItem('auth_token', response.data.access_token);
       emit('login-success')
       router.push('/')
     } catch (err) {

@@ -13,7 +13,7 @@
 <script setup lang="ts">
   import { ref, watchEffect } from 'vue';
   import StatsChart from '../components/StatsChart.vue';
-  import stats from "../apis/stats";
+  import stats from "../services/stats";
 
   const selectedTab = ref('daily');
   const statsData = ref<{ period: string; visits: number }[]>([]);
@@ -24,7 +24,7 @@
   const fetchStats = async () => {
     loading.value = true;
     try {
-      const response = await stats.get(`/stats/${selectedTab.value}?date=${new Date().toISOString().split('T')[0]}`);
+      const response = await stats.getPeriod(selectedTab.value);
       statsData.value = response.data;
 
       chartLabels.value = statsData.value.map((s) => s.period);

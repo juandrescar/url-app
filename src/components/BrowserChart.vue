@@ -16,7 +16,7 @@
     LinearScale,
     BarElement,
   } from 'chart.js';
-  import stats from "../apis/stats";
+  import stats from "../services/stats";
 
   ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement)
 
@@ -62,7 +62,7 @@
   }
 
   onMounted(async () => {
-    const response = await stats.get(props.dataUrl);
+    const response = await stats.getTop(props.dataUrl);
     const data: StatItem[] = await response.data
 
     const labels = data.map((item) => item.browser ?? item.location)

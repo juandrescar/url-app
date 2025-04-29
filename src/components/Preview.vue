@@ -2,21 +2,34 @@
   <v-row>
     <v-col cols="12" sm="10" class="pr-0">
       <v-card
-        append-icon="mdi-link"
         class="my-4"
-        :href="details.original_url"
         rel="noopener"
-        target="_blank"
         :subtitle="details.domain"
         :title="details.title"
         min-height="200"
       >
         <template v-slot:prepend>
           <v-avatar color="blue-darken-2">
-            <v-img :src="details.favicon"></v-img>
+            <v-img
+              target="_blank"
+              :href="details.original_url"
+              :src="details.favicon"></v-img>
           </v-avatar>
         </template>
-        <v-card-text>{{ details.description }}</v-card-text>
+        <v-card-text>
+          {{ details.description }}
+          <p>{{ details.original_url }}</p>
+
+        </v-card-text>
+
+        <v-card-actions>
+          {{ props.details.url }}
+          <v-btn
+            @click="copyUrl"
+          >
+            copiar link
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </v-col>
 
@@ -30,13 +43,29 @@
         />
       </v-card>
     </v-col>
+
+    <v-snackbar v-model="showSnackbar" :timeout="3000" location="top" color="success">
+      URL copiada con éxito
+    </v-snackbar>
   </v-row>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import type { Details } from '../types';
 
-  defineProps<{
+  const props = defineProps<{
     details: Details
   }>()
+
+  const showSnackbar = ref(false);
+
+  async function copyUrl() {
+    try {
+      await navigator.clipboard.writeText(props.details.url);
+      showSnackbar.value = true;
+    } catch (err) {
+      console.error('Error al copiar la URL:', err);
+    }
+  }
 </script>
