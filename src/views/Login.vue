@@ -25,7 +25,7 @@
             :disabled="!isValid"
             type="submit"
           >
-            Login - {{isValid}}
+            Login
           </v-btn>
         </v-card-actions>
       </v-form>

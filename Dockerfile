@@ -2,10 +2,10 @@
 FROM node:18-alpine
 
 # Crear directorio de la app
-WORKDIR /app
+WORKDIR /var/www/stats-api
 
 # Copia archivos necesarios para la instalación
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 # Instala dependencias
 RUN npm install
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5173
 
 # Comando para iniciar NestJS
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["npm", "run", "dev"]
