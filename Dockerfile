@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Crear directorio de la app
-WORKDIR /var/www/stats-api
+WORKDIR /var/www/url-app
 
 # Copia archivos necesarios para la instalación
 COPY package*.json ./
